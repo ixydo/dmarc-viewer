@@ -1,10 +1,24 @@
 #!/bin/sh
 
+set -eu
 
-attachment-downloader --host ${DMARC_VIEWER_IMAP_HOST} --username ${DMARC_VIEWER_IMAP_USER} --delete --password ${DMARC_VIEWER_IMAP_PASS} --imap-folder ${DMARC_VIEWER_IMAP_FOLDER} --output /imapbox
+REPORT_PATH="/imapbox"
 
-find /imapbox -type f -iname *.zip -exec unzip {} -d /imapbox \;
+attachment-downloader \
+  --host "$DMARC_VIEWER_IMAP_HOST" \
+  --username "$DMARC_VIEWER_IMAP_USER" \
+  --password "$DMARC_VIEWER_IMAP_PASS" \
+  --imap-folder "$DMARC_VIEWER_IMAP_FOLDER" \
+  --output "$REPORT_PATH"
 
-python manage.py parse --type in /imapbox
+find "$REPORT_PATH" -type f -iname '*.zip' \
+  -exec unzip -q '{}' -d "$REPORT_PATH" \; \
+  -exec rm '{}' \;
+find "$REPORT_PATH" -type f -iname '*.gz' \
+  -exec gunzip {} \;
 
-rm -Rf /imapbox/*
+rm -f "$REPORT_PATH/None"
+
+python manage.py parse --type in "$REPORT_PATH"
+
+rm -f "$REPORT_PATH/*.xml"

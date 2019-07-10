@@ -31,6 +31,7 @@ services:
       - DMARC_VIEWER_IMAP_USER=dmarcreports@mail.com
       - DMARC_VIEWER_IMAP_PASS=NOTASECRET
       - DMARC_VIEWER_IMAP_FOLDER=INBOX
+      - DMARC_VIEWER_IMAP_REFRESH_INTERVAL=3600
     depends_on:
       - database
     build:
