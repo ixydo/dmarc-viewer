@@ -35,6 +35,7 @@ GEO_LITE2_CITY_DB = os.path.join(BASE_DIR, "GeoLite2-City.mmdb")
 # if you only have one, you can also use the environment variable
 
 ALLOWED_HOSTS = os.environ.get("DMARC_VIEWER_ALLOWED_HOSTS", "").split(";")
+CSRF_TRUSTED_ORIGINS = os.environ.get("DMARC_VIEWER_CSRF_TRUSTED_ORIGINS", "").split(";")
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 INTERNAL_IPS = (u'::1', u'127.0.0.1')
