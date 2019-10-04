@@ -1,12 +1,44 @@
 .PHONY: build
 build:
-	docker-compose build --force-rm --pull
+	docker build --force-rm --pull --tag dmarc-viewer:latest .
 
+.PHONY: stop
 stop:
-	docker-compose stop
+	docker stop dmarc-viewer
 
-clean:
-	docker-compose rm
+.PHONY: stop-wait
+stop-wait:
+	docker stop dmarc-viewer && sleep 5 || :
 
+.PHONY: rm
+rm:
+	docker rm dmarc-viewer
+
+.PHONY: rm-wait
+rm-wait:
+	docker rm dmarc-viewer && sleep 5 || :
+
+.PHONY: run
 run:
-	docker-compose up -d
+	docker run \
+		--log-driver syslog \
+			--log-opt syslog-address=unixgram:///dev/logd \
+			--log-opt syslog-facility=daemon \
+			--log-opt tag=dmarc-viewer \
+		--network host \
+		--name dmarc-viewer \
+		--env-file env/app.env \
+		dmarc-viewer:latest
+
+.PHONY: daemon
+daemon:
+	docker run -d \
+		--restart=always \
+		--log-driver syslog \
+			--log-opt syslog-address=unixgram:///dev/logd \
+			--log-opt syslog-facility=daemon \
+			--log-opt tag=dmarc-viewer \
+		--network host \
+		--name dmarc-viewer \
+		--env-file env/app.env \
+		dmarc-viewer:latest
