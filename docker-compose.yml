@@ -7,31 +7,16 @@ volumes:
 services:
 
   database:
-    environment:
-      MYSQL_DATABASE: dmarc-viewer
-      MYSQL_USER: dmarc-viewer
-      MYSQL_PASSWORD: NOTASECRET
-      MYSQL_RANDOM_ROOT_PASSWORD: NOTASECRET
+    env_file: env/database.env
     restart: always
     image: mariadb
     expose:
       - "3306"
     volumes:
-      - db-data:/var/lib/mysql/"
+      - "db-data:/var/lib/mysql/"
+
   app:
-    environment:
-      - DMARC_VIEWER_ALLOWED_HOSTS=127.0.0.1;localhost
-      - DMARC_VIEWER_SECRET_KEY=arandomkey
-      - DMARC_VIEWER_DB_HOST=database
-      - DMARC_VIEWER_DB_NAME=dmarc-viewer
-      - DMARC_VIEWER_DB_USER=dmarc-viewer
-      - DMARC_VIEWER_DB_PASS=NOTASECRET
-      - DMARC_VIEWER_DB_ENGINE=django.db.backends.mysql
-      - DMARC_VIEWER_IMAP_HOST=mailhost.com
-      - DMARC_VIEWER_IMAP_USER=dmarcreports@mail.com
-      - DMARC_VIEWER_IMAP_PASS=NOTASECRET
-      - DMARC_VIEWER_IMAP_FOLDER=INBOX
-      - DMARC_VIEWER_IMAP_REFRESH_INTERVAL=3600
+    env_file: env/app.env
     depends_on:
       - database
     build:
@@ -40,4 +25,4 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - app-data:/code/shared:ro
+      - "app-data:/code/shared:ro"

@@ -6,18 +6,24 @@ the Django web app and one for the PostgreSQL database. If you prefer an *old
 school* non-dockerized setup, take a look at [`DEPLOYMENT.md`](DEPLOYMENT.md).
 
 ## Variables
-On your host system, export these environment variables. They will be passed
-through to the docker containers to set passwords and
+
+Copy the sample files in `env/` to their respective `env/*.env` files.
+
+```shell
+cp env/app.env.sample env/app.env
+cp env/database.env.sample env/database.env
+```
+
+Then edit these files to set passwords, needed configuration, and
 [Django allowed hosts](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-ALLOWED_HOSTS).
 Don't forget to **replace the values**.
 
 ```shell
-export DMARC_VIEWER_DB_PASS="**** REPLACE WITH DATABASE PASSWORD ****"
-export DMARC_VIEWER_SECRET_KEY="**** REPLACE WITH LONG RANDOM STRING ****"
-export DMARC_VIEWER_ALLOWED_HOSTS="**** REPLACE WITH YOUR DOMAIN OR IP. SEPERATE MULTIPLE ENTRYS WITH ; ****"
+$EDITOR env/*.env
 ```
 
 ## Docker compose
+
 The following command will create and spin up docker services for the `DMARC
 viewer` Django web app and corresponding database. Take a look at
 [`docker-compose.yml`](docker-compose.yml), where both services are defined and
@@ -38,11 +44,13 @@ containers.*
 
 
 ## Import reports and default views
+
 Use `docker exec` to execute commands in your running containers, in order to
 parse DMARC aggregate reports into your database and/or import analysis views.
 
 
 ### Analysis Views
+
 The following command creates three default analysis views. Take a look at
 [`ANALYSIS_VIEWS.md`](ANALYSIS_VIEWS.md) for more infos.
 ```shell
@@ -51,6 +59,7 @@ docker exec -it dmarc-viewer-app \
 ```
 
 ### Parse DMARC aggregate reports
+
 Move your reports to the `.docker-volumes/app` directory. It is mounted inside
 the web app's container `WORKDIR/shared` directory. Then run the following
 commands to download the required
@@ -74,6 +83,7 @@ contains your DMARC aggregate reports. Take a look at
 instructions.*
 
 ## Stop and remove containers
+
 The following command stops and removes all running docker containers that have
 `dmarc-viewer` in their name, e.g. `dmarc-viewer-db` and `dmarc-viewer-app`.
 ```shell
@@ -81,6 +91,7 @@ docker rm $(docker stop $(docker ps -q -f "name=dmarc-viewer"))
 ```
 
 ## Troubleshooting
+
 Since you specified the `--detach` flag in the `docker-compose up` command
 above, logs won't be shown in your host terminal. Use the following command on
 your host system to see logs for both or one of the running containers.
