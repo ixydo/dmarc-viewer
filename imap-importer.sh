@@ -12,9 +12,9 @@ attachment-downloader \
   --output "$REPORT_PATH"
 
 find "$REPORT_PATH" -type f -iname '*.zip' \
-  -exec unzip -q '{}' -d "$REPORT_PATH" \;
+  -exec unzip -q '{}' -n -d "$REPORT_PATH" \;
 find "$REPORT_PATH" -type f -iname '*.gz' \
-  -exec gunzip -k {} \;
+  -exec gunzip -q -f -k {} \;
 
 rm -f "$REPORT_PATH/None"
 
