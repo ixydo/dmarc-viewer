@@ -1,6 +1,10 @@
 #!/bin/sh
 
-set -x -e -u
+set -e -u
+
+if [ "${DMARC_VIEWER_DEBUG:-False}" != "True" ]; then
+  set -x
+fi
 
 wget http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
 gunzip -f GeoLite2-City.mmdb.gz
