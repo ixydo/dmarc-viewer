@@ -1,3 +1,4 @@
 #!/usr/bin/env sh
 
-make build stop-wait rm-wait daemon
+cd /vols/docker/dmarc-viewer 
+make build-cron stop-wait rm-wait daemon

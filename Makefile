@@ -2,6 +2,10 @@
 build:
 	docker build --force-rm --pull --tag dmarc-viewer:latest .
 
+.PHONY: build-cron
+build-cron:
+	docker build --force-rm --pull --tag dmarc-viewer:latest --no-cache .
+
 .PHONY: stop
 stop:
 	docker stop dmarc-viewer
@@ -23,7 +27,7 @@ run:
 	docker run \
 		--log-driver syslog \
 			--log-opt syslog-address=unixgram:///dev/logd \
-			--log-opt syslog-facility=daemon \
+			--log-opt syslog-facility=local0 \
 			--log-opt tag=dmarc-viewer \
 		--network host \
 		--name dmarc-viewer \
@@ -36,7 +40,7 @@ daemon:
 		--restart=always \
 		--log-driver syslog \
 			--log-opt syslog-address=unixgram:///dev/logd \
-			--log-opt syslog-facility=daemon \
+			--log-opt syslog-facility=local0 \
 			--log-opt tag=dmarc-viewer \
 		--network host \
 		--name dmarc-viewer \
