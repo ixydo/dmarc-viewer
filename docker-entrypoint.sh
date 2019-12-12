@@ -2,7 +2,7 @@
 
 set -e -u
 
-if [ "${DMARC_VIEWER_DEBUG:-False}" != "True" ]; then
+if [ "${DMARC_VIEWER_DEBUG:-False}" == "True" ]; then
   set -x
 fi
 
