@@ -71,7 +71,7 @@ from website import choices
 from website.models import (Report, Reporter, ReportError, Record,
         PolicyOverrideReason, AuthResultDKIM, AuthResultSPF)
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger("parse")
 
 geoip_reader = geoip2.database.Reader(settings.GEO_LITE2_CITY_DB)
@@ -128,7 +128,7 @@ class Command(BaseCommand):
                     self.parse(os.path.join(root, file))
 
         else:
-            logger.info("Could not find path '{}'.".format(path))
+            logger.warning("Could not find path '{}'.".format(path))
 
     def parse(self, path):
         """Parses single DMARC aggregate report and stores to db. """
