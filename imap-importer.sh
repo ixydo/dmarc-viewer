@@ -9,12 +9,12 @@ attachment-downloader \
   --username "$DMARC_VIEWER_IMAP_USER" \
   --password "$DMARC_VIEWER_IMAP_PASS" \
   --imap-folder "$DMARC_VIEWER_IMAP_FOLDER" \
-  --output "$REPORT_PATH"
+  --output "$REPORT_PATH" > /dev/null
 
 find "$REPORT_PATH" -type f -iname '*.zip' \
-  -exec echo 'unzip {}' \; -exec unzip -q '{}' -n -d "$REPORT_PATH" \;
+  -exec unzip -n -q '{}' -d "$REPORT_PATH" \;
 find "$REPORT_PATH" -type f -iname '*.gz' \
-  -exec echo 'gunzip {}' \; -exec gunzip -q -f -k {} \;
+  -exec gunzip -q -f -k {} \;
 
 rm -f "$REPORT_PATH/None"
 
