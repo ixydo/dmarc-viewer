@@ -8,4 +8,4 @@ geoip2==2.6.0
 python-dateutil==2.6.1
 pytz==2017.3
 mysqlclient==1.4.2.post1
-git+https://github.com/eieste/attachment-downloader.git#egg=attachment-downloader
+git+https://github.com/ixydo/attachment-downloader.git#egg=attachment-downloader
