@@ -6,3 +6,4 @@ dmarc-demo-data/
 env/*.env
 node_modules
 venv/
+GeoIP.conf

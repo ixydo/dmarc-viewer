@@ -1,4 +1,31 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+# Note that `| ts` requires moreutils installed
+
+set -u
+
+# Redirect stdout and stderr to log files
+LOGDIR="/var/log"
+LOGDATE="$(date +%F-%H:%M:%S)"
+LOGFILE="$LOGDIR/${0//\//_}_$LOGDATE"
+if [ "--cron" = "$1" ] || [ -n "$MAILTO" ]; then
+    exec 2> "$LOGFILE.err"
+    exec > "$LOGFILE.log"
+else
+    exec 2> >(tee "$LOGFILE.err" >&2)
+    exec > >(tee "$LOGFILE.log")
+fi
+
+# Trap any errors
+show_error() {
+    cat "$LOGFILE.err"
+}
+trap show_error ERR
 
 cd /vols/docker/dmarc-viewer 
-make build-cron stop-wait rm-wait daemon
+make --silent build-cron stop-wait rm-wait daemon | ts
+
+# Clear the trap handling
+trap - ERR
+if [ -s $LOGFILE.err ]; then
+    show_error
+fi

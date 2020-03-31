@@ -8,17 +8,28 @@ store custom `analysis views` that filter reports based on the criteria you are
 interested in.
 
 ## Live Demo
+
 A  `DMARC viewer` demo is available at
 [dmarc-viewer.abteil.org](https://dmarc-viewer.abteil.org).
 
 
 ## Configure DNS
+
 To **receive DMARC aggregate reports** for your domains all you need to do is
 to add a DMARC entry to your DNS records. Read [*"Anatomy of a DMARC resource
 record in the DNS"*](https://dmarc.org/overview/) for initial guidance.
 
 
+## Set up Maxmind for GeoIP updates
+
+We need to get the GeoLite2-City database from Maxmind.  As of January 2020
+Maxmind require you use a licence to download this.  You'll need to go through
+registration and place the GeoIP.conf file in the top level of the repo before
+launching the service.
+
+
 ## Start Analyzing!
+
 To analyze your own DMARC aggregate reports you need to deploy an instance of
 `DMARC viewer`. Follow these steps to get you started:
 
@@ -33,6 +44,7 @@ You'll find further usage instructions on the
 contextual help throughout the website (look out for "**`?`**" symbols).
 
 ## Contribute
+
 `DMARC viewer` is an open source project [*(MIT)*](LICENSE). If you want a new
 feature, discover a bug or have some general feedback, feel free to file an
 [*issue*](https://github.com/dmarc-viewer/dmarc-viewer/issues). You can also

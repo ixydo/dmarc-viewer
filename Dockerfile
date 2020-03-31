@@ -1,33 +1,39 @@
 # Dockerfile for DMARC viewer app
 # Use Alpine as stripped down OS
-FROM python:3.6-alpine
-
-# Copy in your requirements file
-ADD requirements.txt /requirements.txt
+FROM python:3.6-slim
 
 # Install build deps, then run `pip install`, then remove unneeded build deps
 # all in a single step. Correct the path to your production requirements file,
 # if needed.
 RUN set -ex \
-    && apk add --no-cache --virtual .build-deps \
-            gcc \
-            make \
-            libc-dev \
-            libffi-dev \
-            musl-dev \
-            linux-headers \
+	&& apt update \
+    && apt upgrade -fy \
+    && apt install -fy build-essential \
+            curl \
             git \
-            pcre-dev \
-            postgresql-dev \
-            libpq \
-            py-psycopg2 \
-            cairo-dev \
-            mysql-client \
-            mariadb-dev \
+            jq \
+            mariadb-client \
             unzip \
-    && pip install -U pip \
-    && pip install --no-cache-dir -r /requirements.txt \
-    && pip install --no-cache-dir uwsgi \
+            tar \
+            libc-dev \
+            libcairomm-1.0-dev \
+            libffi-dev \
+            libmariadb-dev \
+            libmariadb-dev-compat \
+            libpcre++-dev \
+            libpq5 \
+            libpq-dev \
+ && apt clean \
+ && python3 -m pip install -U pip
+
+# Copy in your requirements file
+ADD requirements.txt /requirements.txt
+
+RUN python3 -m pip install --no-cache-dir -r /requirements.txt \
+    && python3 -m pip install --no-cache-dir uwsgi
+
+RUN set -ex \
+ && curl -sL $(curl -sL https://api.github.com/repos/maxmind/geoipupdate/releases/latest | jq -Mr '.assets[].browser_download_url' | grep -E 'geoipupdate_[0-9.]+_linux_amd64.tar.gz') | tar x -z -C /usr/local/bin --strip-components=1 --wildcards "g*/geoipupdate" \
     && find /usr/local \
         \( -type d -a -name test -o -name tests \) \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \

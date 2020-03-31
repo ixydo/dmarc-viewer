@@ -2,13 +2,11 @@
 
 set -e -u
 
-if [ "${DMARC_VIEWER_DEBUG:-False}" == "True" ]; then
+if [ "${DMARC_VIEWER_DEBUG:-False}" = "True" ]; then
   set -x
 fi
 
-wget http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
-gunzip -f GeoLite2-City.mmdb.gz
-
+geoipupdate -f /etc/GeoIP.conf -d ./
 
 # NOTE: Below management commands are no-ops if they ran before
 # Populate initial DMARC viewer db model

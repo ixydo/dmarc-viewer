@@ -4,7 +4,7 @@ build:
 
 .PHONY: build-cron
 build-cron:
-	docker build --force-rm --pull --tag dmarc-viewer:latest --no-cache .
+	docker build -q --force-rm --pull --tag dmarc-viewer:latest --no-cache .
 
 .PHONY: stop
 stop:
@@ -32,12 +32,14 @@ run:
 		--network host \
 		--name dmarc-viewer \
 		--env-file env/app.env \
+		-v $(PWD)/GeoIP.conf:/etc/GeoIP.conf:ro \
+		--rm \
 		dmarc-viewer:latest
 
 .PHONY: daemon
 daemon:
 	docker run -d \
-		--restart=always \
+		--restart=unless-stopped \
 		--log-driver syslog \
 			--log-opt syslog-address=unixgram:///dev/logd \
 			--log-opt syslog-facility=local0 \
@@ -45,4 +47,5 @@ daemon:
 		--network host \
 		--name dmarc-viewer \
 		--env-file env/app.env \
+		-v $(PWD)/GeoIP.conf:/etc/GeoIP.conf:ro \
 		dmarc-viewer:latest
