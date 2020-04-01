@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # Note that `| ts` requires moreutils installed
 
-set -u
-
 # Redirect stdout and stderr to log files
 LOGDIR="/var/log"
 LOGDATE="$(date +%F-%H:%M:%S)"
@@ -20,6 +18,8 @@ show_error() {
     cat "$LOGFILE.err"
 }
 trap show_error ERR
+
+set -u
 
 cd /vols/docker/dmarc-viewer 
 make --silent build-cron stop-wait rm-wait daemon | ts
